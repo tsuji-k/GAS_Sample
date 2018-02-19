@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+    <?!= include("css"); ?>
+  </head>
+  <body>
+    <?
+      var folderPath = getFolderPath();
+            
+      //辿ったルートに戻るためのボタンを作成する
+      //※現状は「マイドライブ」しか表示できていない
+      for(var i = 0; i < folderPath.length; i++) {
+        var name = folderPath[i][0];
+        var id = folderPath[i][1];
+        var url = getScriptUrl() + '?page=page&id=' + id;
+        console.log("url", url);
+        
+        output.append('<button type="button" id="path" onclick="window.top.location.href = \'' + url + '\'">' + name + '</button>');
+      }
+      
+      //前のページに戻るボタンを作成する
+      output.append('<button type="button" id="path" onclick="history.back()">戻る</button>');
+     
+      //表示するフォルダのIDを取得する
+      var folderId = getFolderId();
+      
+      if(folderId == "") {
+        //ルートフォルダのフォルダを取得する
+        var folders = getRootFolder();
+        //ルートフォルダのファイルを取得する
+        var files = getRootFile();
+      } else {
+        //指定されえたIDのフォルダを取得する
+        var folders = getFolder(folderId);
+        //指定されたIDのファイルを取得する
+        var files = getFile(folderId);
+      }
+      
+      //取得したフォルダのボタンを作成する
+      if(folders.length > 0) {
+        output.append('<h2>フォルダ一覧</h2>');
+        for(var i = 0; i < folders.length; i++) {
+          var name = folders[i][0];
+          var id = folders[i][1];
+          var kind = folders[i][2];
+          var url = getScriptUrl() + '?page=page&id=' + id;
+        
+          output.append('<button type="button" id="' + kind + '" onclick="window.top.location.href = \'' + url + '\'">' + name + '</button>');
+        }
+      }
+
+      //取得したファイルのボタンを作成する
+      if(files.length > 0){
+        output.append('<h2>ファイル一覧</h2>');
+        for(var i = 0; i < files.length; i++) {
+          var name = files[i][0];
+          var id = files[i][1];
+          var kind = files[i][2];
+          var url = getScriptUrl() + '?page=page&id=' + id;
+        
+          output.append('<button type="button" id="' + kind + '" onClick="window.open(\'' + id + '\')">' + name + '</button>');
+        }
+      }
+    ?>
+  </body>
+</html>
